@@ -19,16 +19,19 @@ import android.widget.TextView
  */
 abstract class RecyclerViewAdapter<T, E : ViewDataBinding>(var context: Context, var dataList: List<T>) :
         RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
-
-    abstract fun getLayoutId(viewId: Int): Int
-    abstract fun convert(viewHolder: ViewHolder, data: T, position: Int)
+    private lateinit var viewDataBinding: E
+    abstract fun getLayoutId(): Int
+    abstract fun convert(viewHolder: ViewHolder, viewDataBinding: E, data: T, position: Int)
 
     override fun onCreateViewHolder(parent: ViewGroup, layoutId: Int): ViewHolder {
-        return ViewHolder.viewHolder<E>(parent, getLayoutId(layoutId), context)
+        viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
+            getLayoutId(), parent, false)
+
+        return ViewHolder.getViewHolder(viewDataBinding)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        convert(viewHolder, dataList[position], position)
+        convert(viewHolder, viewDataBinding, dataList[position], position)
     }
 
     override fun getItemCount(): Int {
@@ -50,11 +53,7 @@ abstract class RecyclerViewAdapter<T, E : ViewDataBinding>(var context: Context,
         }
 
         companion object {
-            private lateinit var viewDataBinding: ViewDataBinding
-            fun <E : ViewDataBinding> viewHolder(parent: ViewGroup, layoutId: Int, context: Context): ViewHolder {
-                viewDataBinding = DataBindingUtil.inflate<E>(LayoutInflater.from(context),
-                        layoutId, parent, false
-                )
+            fun <E : ViewDataBinding> getViewHolder(viewDataBinding: E): ViewHolder {
                 return ViewHolder(viewDataBinding.root)
             }
         }

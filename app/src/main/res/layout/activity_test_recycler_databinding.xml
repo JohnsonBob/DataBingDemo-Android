@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,28 +15,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="添加数据" />
+            android:text="添加数据"/>
 
         <Button
             android:id="@+id/bt_update"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="修改数据" />
+            android:text="修改数据"/>
 
         <Button
             android:id="@+id/bt_delete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="删除数据" />
+            android:text="删除数据"/>
 
         <Button
             android:id="@+id/bt_clear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="清空数据" />
+            android:text="清空数据"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

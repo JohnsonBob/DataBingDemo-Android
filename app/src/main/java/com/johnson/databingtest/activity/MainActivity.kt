@@ -1,5 +1,6 @@
 package com.johnson.databingtest.activity
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         //测试双向绑定
         good = Goods("name", "描述信息")
         var activityMain2Binding = DataBindingUtil.setContentView<ActivityMain2Binding>(this,
-            R.layout.activity_main2
+                R.layout.activity_main2
         ).apply {
             goods = good
         }
@@ -35,10 +36,12 @@ class MainActivity : AppCompatActivity() {
             activityMain2Binding.goods = Goods("nadsafme", "sdafddsafdsaf")
         })
 
-        bt_recyclerView.setOnClickListener({})
+        bt_recyclerView.setOnClickListener({
+            startActivity(Intent(this, TestRecylerViewActivity::class.java))
+        })
     }
 
-    companion object{
+    companion object {
         @JvmStatic
         fun nameTextchang(goods: Goods) {
         }
