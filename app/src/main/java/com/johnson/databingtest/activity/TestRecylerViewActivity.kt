@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_test_recycler_databinding.*
 class TestRecylerViewActivity : AppCompatActivity() {
     private lateinit var studentListAdapter: RecyclerViewAdapter<StudentModle, ItemStudentListBinding>
     private var studentList: ArrayList<StudentModle> = arrayListOf()
-    private lateinit var gridLayoutManager:GridLayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +40,9 @@ class TestRecylerViewActivity : AppCompatActivity() {
                 return R.layout.item_student_list
             }
 
-            override fun convert(
-                viewHolder: ViewHolder,
-                viewDataBinding: ItemStudentListBinding,
-                data: StudentModle,
-                position: Int
-            ) {
-                viewDataBinding.shutdent = data
-                viewDataBinding.executePendingBindings()
+            override fun convert(viewHolder: ViewHolder<ItemStudentListBinding>, data: StudentModle, position: Int) {
+                viewHolder.dataBinding.shutdent = data
+                viewHolder.dataBinding.executePendingBindings()
             }
 
         }
@@ -58,6 +53,10 @@ class TestRecylerViewActivity : AppCompatActivity() {
     }
 
     private fun setListener() {
+
+        /**
+         * 添加数据
+         */
         bt_add.setOnClickListener {
             var index = (1..100).shuffled().last()
             studentList.add(0, StudentModle("赵四$index", "${index}", if (index and 1 == 1) "男" else "女"))
@@ -65,10 +64,16 @@ class TestRecylerViewActivity : AppCompatActivity() {
             studentListAdapter.notifyItemInserted(0)
         }
 
+        /**
+         * 修改数据
+         */
         bt_update.setOnClickListener {
-
+            if (studentList.size > 0) studentList.get(0).name.set("顶呱呱")
         }
 
+        /**
+         * 删除数据
+         */
         bt_delete.setOnClickListener {
             if (studentList.size > 0) {
                 studentList.removeAt(studentList.size - 1)
@@ -76,6 +81,9 @@ class TestRecylerViewActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * 清除数据
+         */
         bt_clear.setOnClickListener {
             studentList.clear()
             studentListAdapter.notifyDataSetChanged()

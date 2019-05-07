@@ -18,34 +18,30 @@ import android.widget.TextView
  * @Date 2019/5/7 10:23
  */
 abstract class RecyclerViewAdapter<T, E : ViewDataBinding>(var context: Context, var dataList: List<T>) :
-        RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
-    private lateinit var viewDataBinding: E
+    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder<E>>() {
     abstract fun getLayoutId(): Int
-    abstract fun convert(viewHolder: ViewHolder, viewDataBinding: E, data: T, position: Int)
+    abstract fun convert(viewHolder: ViewHolder<E>, data: T, position: Int)
 
-    override fun onCreateViewHolder(parent: ViewGroup, layoutId: Int): ViewHolder {
-        viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
-            getLayoutId(), parent, false)
-
-        return ViewHolder.getViewHolder(viewDataBinding)
+    override fun onCreateViewHolder(parent: ViewGroup, layoutId: Int): ViewHolder<E> {
+        return ViewHolder.getViewHolder(parent, getLayoutId(), context)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        convert(viewHolder, viewDataBinding, dataList[position], position)
+    override fun onBindViewHolder(viewHolder: ViewHolder<E>, position: Int) {
+        convert(viewHolder, dataList[position], position)
     }
 
     override fun getItemCount(): Int {
         return dataList.count()
     }
 
-    class ViewHolder constructor(var viewHolder: View) : RecyclerView.ViewHolder(viewHolder) {
-        var mViews: SparseArray<View> = SparseArray()
+    class ViewHolder<E : ViewDataBinding> constructor(var dataBinding: E) : RecyclerView.ViewHolder(dataBinding.root) {
+        private var mViews: SparseArray<View> = SparseArray()
 
-        fun <T : View> getView(id: Int): T {
+        private fun <T : View> getView(id: Int): T {
             var view = mViews.get(id)
 
             var getView = {
-                var myview = viewHolder.findViewById<T>(id)
+                var myview = dataBinding.root.findViewById<T>(id)
                 mViews.put(id, myview)
                 mViews.get(id)
             }
@@ -53,8 +49,13 @@ abstract class RecyclerViewAdapter<T, E : ViewDataBinding>(var context: Context,
         }
 
         companion object {
-            fun <E : ViewDataBinding> getViewHolder(viewDataBinding: E): ViewHolder {
-                return ViewHolder(viewDataBinding.root)
+
+            fun <E : ViewDataBinding> getViewHolder(parent: ViewGroup, layoutId: Int, context: Context): ViewHolder<E> {
+                var viewDataBinding = DataBindingUtil.inflate<E>(
+                    LayoutInflater.from(context),
+                    layoutId, parent, false
+                )
+                return ViewHolder(viewDataBinding)
             }
         }
 
